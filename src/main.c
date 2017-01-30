@@ -23,7 +23,7 @@ int main(void) {
 
 	if(init_list(&head, &tail) == false) return EXIT_FAILURE;
 
-	print_cc_list(&head);
+	//print_cc_list(&head);
 
 	bubbleSort(&head);
 

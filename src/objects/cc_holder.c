@@ -154,6 +154,7 @@ void bubbleSort(cc_holder_t ** head) {
 	int i = 0;
 	while(1) {
 		if(bubbleSortInner(*head) == false) break;
+		while((*head)->previous != NULL) *head = (*head)->previous;
 		i++;
 	}
 
@@ -165,42 +166,51 @@ Bool bubbleSortInner(cc_holder_t * node) {
 
 	//TODO pointer swap instead of value swap
 	//pointer swap proving to be problematic, perhaps pop/push
+	// Update. Can look confusing but its do able.
+	/*
+	 * Have to consider 4 elements, previous (1), current (2), next(3) & next->next (4)
+	 *
+	 * 4.previous = 2
+	 * 1.next = 3
+	 *
+	 * 2.next = 4
+	 * 2.previous = 1
+	 *
+	 * 3.previous = 1
+	 * 3.next = 2
+	 *
+	 */
 
 	Bool swapped = false;
 	cc_holder_t *temp;
-	if((temp = malloc(sizeof(cc_holder_t))) == NULL) return swapped;
 
 	while(node->next != NULL) {
 		if(node->cents > node->next->cents) {
 
-			temp->age = node->age;
-			temp->cc = node->cc;
-			temp->cents = node->cents;
-			temp->first_name = node->first_name;
-			temp->last_name = node->last_name;
+			temp = node->next;
 
-			node->age = node->next->age;
-			node->cc = node->next->cc;
-			node->cents = node->next->cents;
-			node->first_name = node->next->first_name;
-			node->last_name = node->next->last_name;
+			if(node->next->next != NULL) {
+				node->next->next->previous = node;
+				node->next = node->next->next;
+			} else {
+				node->next = NULL;
+			}
 
-			node->next->age = temp->age;
-			node->next->cc = temp->cc;
-			node->next->cents = temp->cents;
-			node->next->first_name = temp->first_name;
-			node->next->last_name = temp->last_name;
+			if(node->previous != NULL) {
+				node->previous->next = temp;
+				temp->previous = node->previous;
+			} else {
+				temp->previous = NULL;
+			}
+
+			temp->next = node;
+			node->previous = temp;
 
 			swapped = true;
 		} else {
 			node = node->next;
 		}
 	}
-
-	while(node->previous != NULL) node = node->previous; //return head to the first item
-
-	free(temp);
-	temp = NULL;
 	return swapped;
 }
 
