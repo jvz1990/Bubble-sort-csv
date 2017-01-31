@@ -5,7 +5,6 @@
  *      Author: j
  */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,15 +16,9 @@
 #define _file "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv.csv"
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
 
-const char* inject_record(char* line)
-{
-
-	return NULL;
-}
-
 Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
 
-	if(*head != NULL || *tail != NULL) {
+	if (*head != NULL || *tail != NULL) {
 		puts("\n\n!!=== ERROR - EXISTING LIST DETECTED ===!!\n\n");
 		return false;
 	}
@@ -38,43 +31,41 @@ Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
 	fields field = last;
 	char *tmp, *tok;
 
-	while (fgets(record, 1024, input_file))
-	{
+	while (fgets(record, 1024, input_file)) {
 		tmp = strdup(record);
 		field = last;
 
-		if((tmp_node = malloc(sizeof(cc_holder_t))) == NULL) return false;
+		if ((tmp_node = malloc(sizeof(cc_holder_t))) == NULL)
+			return false;
 
-		for (tok = strtok(tmp, ",");
-			tok && *tok;
-			tok =  strtok(NULL, ",\n"))	{
+		for (tok = strtok(tmp, ","); tok && *tok; tok = strtok(NULL, ",\n")) {
 
-			switch(field) {
-				case(last):
-						tmp_node->last_name = tok;
-						break;
-				case(first):
-						tmp_node->first_name = tok;
-						break;
-				case(cc_no):
-						tmp_node->cc = tok;
-						break;
-				case(money):
-						remove_chars(tok);
-						tmp_node->cents = (unsigned int) (atoi(tok));
-						break;
-				default:
-					break;
+			switch (field) {
+			case (last):
+				tmp_node->last_name = tok;
+				break;
+			case (first):
+				tmp_node->first_name = tok;
+				break;
+			case (cc_no):
+				tmp_node->cc = tok;
+				break;
+			case (money):
+				remove_chars(tok);
+				tmp_node->cents = (unsigned int) (atoi(tok));
+				break;
+			default:
+				break;
 			}
 
 			field++;
 		}
 
-		if(*head == NULL) {
+		if (*head == NULL) {
 			tmp_node->next = NULL;
 			tmp_node->previous = NULL;
 			*head = tmp_node;
-		} else if(*tail == NULL) {
+		} else if (*tail == NULL) {
 			(*head)->next = tmp_node;
 			tmp_node->previous = *head;
 			tmp_node->next = NULL;
@@ -88,14 +79,15 @@ Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
 
 	}
 
-	if(fclose(input_file) == 0) return true;
-		else
-	return false;
+	if (fclose(input_file) == 0)
+		return true;
+	else
+		return false;
 }
 
 void destroy_cc_list(cc_holder_t ** head, cc_holder_t ** last) {
 
-	if(*head == NULL) {
+	if (*head == NULL) {
 		puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
 		return;
 	}
@@ -103,7 +95,7 @@ void destroy_cc_list(cc_holder_t ** head, cc_holder_t ** last) {
 	//end to start
 	cc_holder_t * temp;
 	temp = *last;
-	while(temp->previous != NULL) {
+	while (temp->previous != NULL) {
 		temp = (*last)->previous;
 		free(*last);
 		*last = NULL;
@@ -114,26 +106,25 @@ void destroy_cc_list(cc_holder_t ** head, cc_holder_t ** last) {
 	*last = NULL;
 }
 
-void print_cc_list(cc_holder_t ** head) {
+void print_cc_list(cc_holder_t * head) {
 
-	if(*head == NULL) {
+	if (head == NULL) {
 		puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
 		return;
 	}
 
 	int i = 0;
-	cc_holder_t * current = *head;
+	cc_holder_t * current = head;
 	int c = 0;
 
-	while(current != NULL) {
+	while (current != NULL) {
 		c = current->cents % 100;
 		printf("Object no. [%i] with person [%s %s] has cc no [%s] and has [$%d%s%d]\n",
-				i++,
-				current->first_name,
+				i++, current->first_name,
 				current->last_name,
 				current->cc,
 				(unsigned int) (current->cents / 100),
-				(c < 10)  ? ".0" : ".",
+				(c < 10) ? ".0" : ".",
 				c);
 		current = current->next;
 	}
@@ -141,36 +132,44 @@ void print_cc_list(cc_holder_t ** head) {
 
 void remove_chars(char *str) {
 	char *read = str, *write = str;
-	while(*read) {
+	while (*read) {
+		//write same position as read
 		*write = *read++;
+		//write does not include characters below
 		write += ((*write != ',') && (*write != '$') && (*write != '.'));
 	}
 	*write = '\0';
 	str = write;
 }
 
-void bubbleSort(cc_holder_t ** head) {
+void bubbleSort(cc_holder_t * head) {
 
+	/*
+	 * Essentially start from the head and find an item to 'bubble up'
+	 * until there are items to 'bubble up'.
+	 * TODO optimize algorithm to exclude highest values -> need counter and chain size counter
+	 */
 	int i = 0;
-	while(1) {
-		if(bubbleSortInner(*head) == false) break;
-		while((*head)->previous != NULL) *head = (*head)->previous;
+	while (1) {
+		if (bubbleSortInner(head) == false)
+			break;
+		while (head->previous != NULL)
+			head = head->previous;
 		i++;
 	}
 
-	printf("number of iterations [%i]\n", i);
+	printf("number of outer iterations [%i]\n", i);
 
 }
 
 Bool bubbleSortInner(cc_holder_t * node) {
 
-	//TODO pointer swap instead of value swap
-	//pointer swap proving to be problematic, perhaps pop/push
-	// Update. Can look confusing but its do able.
+	// Update. Can look confusing but pointer swap is do able.
 	/*
 	 * Have to consider 4 elements, previous (1), current (2), next(3) & next->next (4)
+	 * So swap positions 2 & 3. 1 & 4 have to be corrected as well (prev/next ptr)
 	 *
-	 * 4.previous = 2
+	 * 4.previous = 2 //outer 2
 	 * 1.next = 3
 	 *
 	 * 2.next = 4
@@ -183,34 +182,37 @@ Bool bubbleSortInner(cc_holder_t * node) {
 
 	Bool swapped = false;
 	cc_holder_t *temp;
+	//UInt i = 0;
 
-	while(node->next != NULL) {
-		if(node->cents > node->next->cents) {
+	while (node->next != NULL) {
+		if (node->cents > node->next->cents) {
 
 			temp = node->next;
 
-			if(node->next->next != NULL) {
-				node->next->next->previous = node;
-				node->next = node->next->next;
+			if (node->next->next != NULL) {
+				node->next->next->previous = node; //4 pointing to 2
+				node->next = node->next->next; //2 pointing to 4
 			} else {
-				node->next = NULL;
+				node->next = NULL; // else there will be no next node to point to
 			}
 
-			if(node->previous != NULL) {
-				node->previous->next = temp;
-				temp->previous = node->previous;
+			if (node->previous != NULL) {
+				node->previous->next = temp; //1 pointing to 3
+				temp->previous = node->previous; //3 pointing to 1
 			} else {
-				temp->previous = NULL;
+				temp->previous = NULL; // dealing with the head
 			}
 
-			temp->next = node;
-			node->previous = temp;
+			temp->next = node; //3 = 2
+			node->previous = temp; //2 = 3
 
 			swapped = true;
 		} else {
 			node = node->next;
 		}
+		//i++;
 	}
+	//printf("number of inner iterations [%d]\n", i);
 	return swapped;
 }
 
@@ -219,22 +221,23 @@ Bool writeToFile(cc_holder_t * node) {
 	FILE* output_file = fopen(_file2, "w");
 	int c = 0;
 
-	while(node != NULL) {
+	while (node != NULL) {
 		c = node->cents % 100;
-		fprintf(output_file, "%s,%s,%s,$%d%s%d\n",
+		fprintf(output_file,
+				"%s,%s,%s,$%d%s%d\n",
 				node->last_name,
 				node->first_name,
-				node->cc,
-				(unsigned int) (node->cents / 100),
-				(c < 10)  ? ".0" : ".",
-				c);
+				node->cc, (unsigned int) (node->cents / 100),
+				(c < 10) ? ".0" : ".", c);
 
 		node = node->next;
 	}
-	while(node != NULL) node = node->previous;
+	while (node != NULL)
+		node = node->previous; // reverse head to beginning
 
-	if(fclose(output_file) == 0) return true;
-		else
-	return false;
+	if (fclose(output_file) == 0)
+		return true;
+	else
+		return false;
 
 }
