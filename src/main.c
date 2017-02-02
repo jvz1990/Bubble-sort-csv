@@ -1,10 +1,14 @@
 /*
  ============================================================================
- Name        : CCcsvParser.c
- Author      : j
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
+ Name        : Bubble-sort-csv
+ Author      : Johan van Zyl
+ Version     : 0.90
+ Copyright   : None! Educational purpose
+ Description : Experimental C project for algorithm analysis and general learning
+
+ 	 	 	 	 The program loads a csv file similar to database table into a doubly linked list (circular).
+ 	 	 	 	 Then (for now) sorts it using bubble sort algorithm.
+
  ============================================================================
  */
 
@@ -19,9 +23,8 @@
 int main(void) {
 
 	cc_holder_t * head = NULL;
-	cc_holder_t * tail = NULL;
 
-	if(init_list(&head, &tail) == false) return EXIT_FAILURE;
+	if(init_list(&head) == false) return EXIT_FAILURE;
 
 	print_cc_list(head);
 
@@ -29,9 +32,9 @@ int main(void) {
 
 	print_cc_list(head);
 
-	printf("Success status %d", (writeToFile(head) == true ?  1 : 0));
+	//printf("Success status %d", (writeToFile(head) == true ?  1 : 0));
 
-	destroy_cc_list(&head, &tail);
+	destroy_cc_list(&head);
 
 
 	return EXIT_SUCCESS;

@@ -16,9 +16,9 @@
 #define _file "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv.csv"
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
 
-Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
+Bool init_list(cc_holder_t ** head) {
 
-	if (*head != NULL || *tail != NULL) {
+	if (*head != NULL) {
 		puts("\n\n!!=== ERROR - EXISTING LIST DETECTED ===!!\n\n");
 		return false;
 	}
@@ -62,19 +62,18 @@ Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
 		}
 
 		if (*head == NULL) {
-			tmp_node->next = NULL;
-			tmp_node->previous = NULL;
-			*head = tmp_node;
-		} else if (*tail == NULL) {
-			(*head)->next = tmp_node;
+			if ((*head = malloc(sizeof(cc_holder_t))) == NULL)
+				return false;
 			tmp_node->previous = *head;
-			tmp_node->next = NULL;
-			*tail = tmp_node;
+			tmp_node->next = *head;
+			(*head)->next = tmp_node;
+			(*head)->previous = tmp_node;
 		} else {
-			tmp_node->previous = *tail;
-			tmp_node->next = NULL;
-			(*tail)->next = tmp_node;
-			*tail = tmp_node;
+			tmp_node->previous = (*head)->previous;
+			tmp_node->next = *head;
+
+			(*head)->previous->next = tmp_node;
+			(*head)->previous = tmp_node;
 		}
 
 	}
@@ -85,25 +84,22 @@ Bool init_list(cc_holder_t ** head, cc_holder_t ** tail) {
 		return false;
 }
 
-void destroy_cc_list(cc_holder_t ** head, cc_holder_t ** last) {
+void destroy_cc_list(cc_holder_t ** head) {
 
 	if (*head == NULL) {
 		puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
 		return;
 	}
 
-	//end to start
 	cc_holder_t * temp;
-	temp = *last;
-	while (temp->previous != NULL) {
-		temp = (*last)->previous;
-		free(*last);
-		*last = NULL;
-		*last = temp;
+	temp = (*head)->next;
+	while (temp != *head) {
+		temp = temp->next;
+		free(temp->previous);
 	}
 	free(*head); // destroying head
 	*head = NULL; // setting NULL
-	*last = NULL;
+	temp = NULL;
 }
 
 void print_cc_list(cc_holder_t * head) {
@@ -114,10 +110,10 @@ void print_cc_list(cc_holder_t * head) {
 	}
 
 	int i = 0;
-	cc_holder_t * current = head;
+	cc_holder_t * current = head->next;
 	int c = 0;
 
-	while (current != NULL) {
+	while (current != head) {
 		c = current->cents % 100;
 		printf("Object no. [%i] with person [%s %s] has cc no [%s] and has [$%d%s%d]\n",
 				i++, current->first_name,
@@ -127,7 +123,9 @@ void print_cc_list(cc_holder_t * head) {
 				(c < 10) ? ".0" : ".",
 				c);
 		current = current->next;
+
 	}
+
 }
 
 void remove_chars(char *str) {
@@ -153,8 +151,6 @@ void bubbleSort(cc_holder_t * head) {
 	while (1) {
 		if (bubbleSortInner(head) == false)
 			break;
-		while (head->previous != NULL)
-			head = head->previous;
 		i++;
 	}
 
@@ -162,7 +158,7 @@ void bubbleSort(cc_holder_t * head) {
 
 }
 
-Bool bubbleSortInner(cc_holder_t * node) {
+Bool bubbleSortInner(cc_holder_t * head) {
 
 	// Update. Can look confusing but pointer swap is do able.
 	/*
@@ -177,34 +173,33 @@ Bool bubbleSortInner(cc_holder_t * node) {
 	 *
 	 * 3.previous = 1
 	 * 3.next = 2
-	 *
-	 */
+	 *	 */
 
 	Bool swapped = false;
-	cc_holder_t *temp;
+	cc_holder_t //*first = NULL,
+				//*second = NULL,
+				*third = NULL,
+				*fourth = NULL,
+				*node = head->next;
 	//UInt i = 0;
 
-	while (node->next != NULL) {
+	while (node != head) {
 		if (node->cents > node->next->cents) {
 
-			temp = node->next;
+			//first = node->previous;
+			//second = node;
+			third = node->next;
+			fourth = node->next->next;
 
-			if (node->next->next != NULL) {
-				node->next->next->previous = node; //4 pointing to 2
-				node->next = node->next->next; //2 pointing to 4
-			} else {
-				node->next = NULL; // else there will be no next node to point to
-			}
+			//outers
+			fourth->previous = node; //4 to 2
+			node->previous->next = third; //1 to 3
 
-			if (node->previous != NULL) {
-				node->previous->next = temp; //1 pointing to 3
-				temp->previous = node->previous; //3 pointing to 1
-			} else {
-				temp->previous = NULL; // dealing with the head
-			}
+			third->previous = node->previous; // 3 to 1
+			third->next = node; // 3 to 2
 
-			temp->next = node; //3 = 2
-			node->previous = temp; //2 = 3
+			node->next = fourth; //2 to 4
+			node->previous = third; //2 to 3
 
 			swapped = true;
 		} else {
@@ -216,12 +211,13 @@ Bool bubbleSortInner(cc_holder_t * node) {
 	return swapped;
 }
 
-Bool writeToFile(cc_holder_t * node) {
+Bool writeToFile(cc_holder_t * head) {
 
 	FILE* output_file = fopen(_file2, "w");
 	int c = 0;
+	cc_holder_t * node = head->next;
 
-	while (node != NULL) {
+	while (node != NULL || node->next != head) {
 		c = node->cents % 100;
 		fprintf(output_file,
 				"%s,%s,%s,$%d%s%d\n",
@@ -232,8 +228,6 @@ Bool writeToFile(cc_holder_t * node) {
 
 		node = node->next;
 	}
-	while (node != NULL)
-		node = node->previous; // reverse head to beginning
 
 	if (fclose(output_file) == 0)
 		return true;
