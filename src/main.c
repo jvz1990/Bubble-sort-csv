@@ -15,27 +15,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "objects/cc_holder.h"
-#include "commons.h"
+#include <cc_holder.h>
+#include <commons.h>
+#include <util.h>
 
 #include <string.h>
 
-int main(void) {
+
+int main(int argc, char *argv[]) {
 
 	cc_holder_t * head = NULL;
+	char * filelocation = NULL;
 
-	if(init_list(&head) == false) return EXIT_FAILURE;
+	if(argc > 0) {
+		puts("\nThe program has received command line arguments\n");
+		puts("Will process arguments and exit!\nArgument List:\n");
+		disp_arguments(&argc, &argv);
+	} else {
+	printf("Press enter to continue...\n");
+		getchar();
 
-	print_cc_list(head);
+	/*
 
-	bubbleSort(head);
+		if(init_list(&head) == false) return EXIT_FAILURE;
 
-	print_cc_list(head);
+		print_cc_list(head);
 
-	//printf("Success status %d", (writeToFile(head) == true ?  1 : 0));
+		bubbleSort(head);
 
-	destroy_cc_list(&head);
+		print_cc_list(head);
 
+		//printf("Success status %d", (writeToFile(head) == true ?  1 : 0));
+
+		destroy_cc_list(&head);*/
+	}
 
 	return EXIT_SUCCESS;
 }

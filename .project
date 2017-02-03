@@ -25,8 +25,12 @@
 	</natures>
 	<variableList>
 		<variable>
-			<name>src</name>
-			<value>file:/C:/Users/j/workspace/CCcsvParser/src</value>
+			<name>objects</name>
+			<value>file:/C:/Users/j/git/Bubble-sort-csv/src/objects</value>
+		</variable>
+		<variable>
+			<name>utils</name>
+			<value>file:/C:/Users/j/git/Bubble-sort-csv/src/utilities</value>
 		</variable>
 	</variableList>
 </projectDescription>

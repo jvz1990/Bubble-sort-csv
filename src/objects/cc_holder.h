@@ -8,7 +8,7 @@
 #ifndef OBJECTS_CC_HOLDER_H_
 #define OBJECTS_CC_HOLDER_H_
 
-#include "../commons.h"
+#include <commons.h>
 
 typedef struct cc_holder {
 	char * last_name;

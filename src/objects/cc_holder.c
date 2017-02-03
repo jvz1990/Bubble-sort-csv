@@ -10,8 +10,8 @@
 #include <string.h>
 #include <errno.h>
 
-#include "../commons.h"
-#include "cc_holder.h"
+#include <commons.h>
+#include <cc_holder.h>
 
 #define _file "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv.csv"
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
@@ -217,7 +217,7 @@ Bool writeToFile(cc_holder_t * head) {
 	int c = 0;
 	cc_holder_t * node = head->next;
 
-	while (node != NULL || node->next != head) {
+	while (node != head) {
 		c = node->cents % 100;
 		fprintf(output_file,
 				"%s,%s,%s,$%d%s%d\n",
