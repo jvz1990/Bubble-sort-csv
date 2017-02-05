@@ -87,7 +87,7 @@ Bool init_list(cc_holder_t ** head) {
 void destroy_cc_list(cc_holder_t ** head) {
 
 	if (*head == NULL) {
-		puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
+		//puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
 		return;
 	}
 

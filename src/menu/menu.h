@@ -13,9 +13,12 @@ typedef enum 	{ONE, TWO, THREE,
 				FOUR, FIVE, SIX,
 				SEVEN, EIGHT, NINE, ERR} choices;
 
+
 void dispOptions(void);
 Bool process_input(choices * choice);
-Bool err_check(char * input);
+Bool err_check(char * input, int * no);
+Bool get_file_path(char ** filepath);
+Bool check_YN(Bool yn);
 
 
 #endif /* MENU_MENU_H_ */

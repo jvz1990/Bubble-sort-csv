@@ -8,10 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <menu.h>
 #include <util.h>
 #include <commons.h>
+
+
 
 #define min_input  1
 #define max_input 10
@@ -32,26 +35,69 @@ void dispOptions(void) {
 	puts("*******************************\n");
 }
 
-Bool err_check(char * input) {
-	int no = atoi(input);
-	if(no < min_input || no > max_input) return false;
+Bool err_check(char * input, int * no) {
+	*no = atoi(input);
+	if(*no < min_input || *no > max_input || *no == 0) return false;
 	return true;
 }
 
 Bool process_input(choices * choice) {
 
 	char * input = NULL;
+	int no;
 	dispOptions();
 	input = getline();
-	if(err_check(input) == false) {
+
+	if(err_check(input, &no) == false) {
 		*choice = ERR;
 		return true;
 	}
 
+	switch(no) {
+		case(1):
+			*choice = ONE;
+			break;
+		case(2):
+			*choice = TWO;
+			break;
+		case(3):
+			*choice = THREE;
+			break;
+		case(4):
+			*choice = FOUR;
+			break;
+		case(5):
+			*choice = FIVE;
+			break;
+		case(6):
+			*choice = SIX;
+			break;
+		case(7):
+			*choice = SEVEN;
+			break;
+		case(8):
+			*choice = EIGHT;
+			break;
+		case(9):
+			*choice = NINE;
+			break;
+		case(10):
+			return false;
+			break;
+	}
 
+	return true;
+}
 
-	printf("\n the input string: [%s] \n", input);
-	getchar();
+Bool get_file_path(char ** filepath) {
+	puts(" *Please copy and paste exact file location:\n");
+	*filepath = getline();
+	if(access(*filepath, F_OK) != -1) return true;
+	else return false;
 
 	return false;
+}
+
+Bool check_YN(Bool yn) {
+
 }
