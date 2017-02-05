@@ -9,6 +9,6 @@
 #define UTILITIES_UTIL_H_
 
 char * getline(void);
-void disp_arguments(int * argc, char ** argv[]);
+void disp_arguments(int argc, char ** argv);
 
 #endif /* UTILITIES_UTIL_H_ */

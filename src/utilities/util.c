@@ -10,11 +10,10 @@
 
 #include <string.h>
 
-void disp_arguments(int * argc, char ** argv[]) {
-	int i = 1;
-
-	for(; i < *argc; ++i) {
-		printf("argv[%d]: %s\n", i, *(argv[i]));
+void disp_arguments(int argc, char ** argv) {
+	int i = 0;
+	for(; i < argc; ++i) {
+		printf("argv[%d]: %s\n", i, *(argv+i));
 	}
 }
 
@@ -46,6 +45,6 @@ char * getline(void) {
         if((*line++ = c) == '\n')
             break;
     }
-    *line = '\0';
+    *(--line) = '\0';
     return linep;
 }

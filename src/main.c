@@ -18,37 +18,36 @@
 #include <cc_holder.h>
 #include <commons.h>
 #include <util.h>
+#include <menu.h>
 
 #include <string.h>
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
 
 	cc_holder_t * head = NULL;
-	char * filelocation = NULL;
+	//char * filelocation = NULL;
 
-	if(argc > 0) {
+	if(argc > 1) {
 		puts("\nThe program has received command line arguments\n");
 		puts("Will process arguments and exit!\nArgument List:\n");
-		disp_arguments(&argc, &argv);
+		disp_arguments(argc, argv);
 	} else {
-	printf("Press enter to continue...\n");
-		getchar();
+		choices choice;
+		while(process_input(&choice) != false) {
+			switch (choice) {
+				case(ERR):
+						puts("\n!!!Input Error!!!\n TRY AGAIN!\n");
+						break;
+				default:
+					break;
+			}
+		}
 
-	/*
-
-		if(init_list(&head) == false) return EXIT_FAILURE;
-
-		print_cc_list(head);
-
-		bubbleSort(head);
-
-		print_cc_list(head);
-
-		//printf("Success status %d", (writeToFile(head) == true ?  1 : 0));
-
-		destroy_cc_list(&head);*/
+		puts("\n Goodbye! \n");
 	}
+
+	destroy_cc_list(&head);
 
 	return EXIT_SUCCESS;
 }
