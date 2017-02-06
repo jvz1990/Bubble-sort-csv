@@ -139,7 +139,7 @@ void remove_chars(char *str) {
 	str = write;
 }
 
-void bubbleSort(cc_holder_t * head) {
+void bubbleSort(cc_holder_t * head, choices * choice) {
 
 	/*
 	 * Essentially start from the head and find an item to 'bubble up'
@@ -147,8 +147,12 @@ void bubbleSort(cc_holder_t * head) {
 	 * TODO optimize algorithm to exclude highest values -> need counter and chain size counter
 	 */
 	int i = 0;
+	if(head == NULL) {
+		puts("\nPlease load a csv file first.\n");
+		return;
+	}
 	while (1) {
-		if (bubbleSortInner(head) == false)
+		if (bubbleSortInner(head, choice) == false)
 			break;
 		i++;
 	}
@@ -157,7 +161,31 @@ void bubbleSort(cc_holder_t * head) {
 
 }
 
-Bool bubbleSortInner(cc_holder_t * head) {
+Bool swap(cc_holder_t * cur, choices * choice) {
+
+	switch (*choice) {
+		 case THREE:
+			 if(cur->cents > cur->next->cents) return true;
+			 break;
+		 case FOUR:
+			 if(strcmp(cur->first_name, cur->next->first_name) > 0) return true;
+			 break;
+		 case FIVE:
+			 //printf("1: [%s], 2: [%s]\n",cur->last_name, cur->next->last_name);
+			 if(strcmp(cur->last_name, cur->next->last_name) > 0) return true;
+			 break;
+		 case SIX:
+			 if(strcmp(cur->cc, cur->next->cc) > 0) return true;
+			 break;
+		 default:
+			 puts("\n Programmer Error\n");
+			 break;
+	}
+
+	return false;
+}
+
+Bool bubbleSortInner(cc_holder_t * head, choices * choice) {
 
 	// Update. Can look confusing but pointer swap is do able.
 	/*
@@ -175,26 +203,26 @@ Bool bubbleSortInner(cc_holder_t * head) {
 	 *	 */
 
 	Bool swapped = false;
-	cc_holder_t //*first = NULL,
+	cc_holder_t *first = NULL,
 				//*second = NULL,
 				*third = NULL,
 				*fourth = NULL,
 				*node = head->next;
 	//UInt i = 0;
 
-	while (node != head) {
-		if (node->cents > node->next->cents) {
+	while (node != head && node->next != head) {
+		if (swap(node, choice) == true) {
 
-			//first = node->previous;
+			first = node->previous;
 			//second = node;
 			third = node->next;
 			fourth = node->next->next;
 
 			//outers
 			fourth->previous = node; //4 to 2
-			node->previous->next = third; //1 to 3
+			first->next = third; //1 to 3
 
-			third->previous = node->previous; // 3 to 1
+			third->previous = first; // 3 to 1
 			third->next = node; // 3 to 2
 
 			node->next = fourth; //2 to 4

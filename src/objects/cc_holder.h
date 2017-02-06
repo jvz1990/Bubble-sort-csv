@@ -27,8 +27,9 @@ Bool init_list(cc_holder_t ** head, char ** filepath);
 void destroy_cc_list(cc_holder_t ** head);
 void print_cc_list(cc_holder_t * head);
 void remove_chars(char *str);
-void bubbleSort(cc_holder_t * head);
-Bool bubbleSortInner(cc_holder_t * head);
+void bubbleSort(cc_holder_t * head, choices * choice);
+Bool bubbleSortInner(cc_holder_t * head, choices * choice);
 Bool writeToFile(cc_holder_t * head, char * filepath);
+Bool swap(cc_holder_t * cur, choices * choice);
 
 #endif /* OBJECTS_CC_HOLDER_H_ */

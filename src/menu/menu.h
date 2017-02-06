@@ -9,10 +9,6 @@
 
 #ifndef MENU_MENU_H_
 #define MENU_MENU_H_
-typedef enum 	{ONE, TWO, THREE,
-				FOUR, FIVE, SIX,
-				SEVEN, EIGHT, NINE, ERR} choices;
-
 
 void dispOptions(void);
 Bool process_input(choices * choice);

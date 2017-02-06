@@ -72,21 +72,33 @@ int main(int argc, char **argv) {
 					puts("Option 3 has been selected.\n");
 					puts("Sorting list by $ with bubble sort.\n");
 					tic = clock();
-					bubbleSort(head);
+					bubbleSort(head, &choice);
 					toc = clock();
 					printf("Elapsed: %f seconds\n", (double)(toc - tic) / CLOCKS_PER_SEC);
 					break;
 				case(FOUR):
-						//TODO opt4
 					puts("Option 4 has been selected.\n");
+					puts("Sorting list by first name with bubble sort.\n");
+					tic = clock();
+					bubbleSort(head, &choice);
+					toc = clock();
+					printf("Elapsed: %f seconds\n", (double)(toc - tic) / CLOCKS_PER_SEC);
 					break;
 				case(FIVE):
-					//TODO opt5
 					puts("Option 5 has been selected.\n");
+					puts("Sorting list by last name with bubble sort.\n");
+					tic = clock();
+					bubbleSort(head, &choice);
+					toc = clock();
+					printf("Elapsed: %f seconds\n", (double)(toc - tic) / CLOCKS_PER_SEC);
 					break;
 				case(SIX):
-					//TODO opt6
 					puts("Option 6 has been selected.\n");
+					puts("Sorting list by CC number with bubble sort.\n");
+					tic = clock();
+					bubbleSort(head, &choice);
+					toc = clock();
+					printf("Elapsed: %f seconds\n", (double)(toc - tic) / CLOCKS_PER_SEC);
 					break;
 				case(SEVEN):
 					puts("Option 7 has been selected.\n");

@@ -25,11 +25,12 @@ void dispOptions(void) {
 	puts(" [1] Select csv file.");
 	puts(" [2] Load csv file.");
 	puts(" \n Account Sorting Options:\n");
-	puts(" [3] Sort by amount of Dollars.");
-	puts(" [4] Sort by CC number.");
-	puts(" [5] Sort by first name.");
-	puts(" [6] Sort by last name.");
-	puts(" [7] Print list.");
+	puts(" [3] Sort by amount of dollars.");
+	puts(" [4] Sort by first name.");
+	puts(" [5] Sort by last name.");
+	puts(" [6] Sort by CC number.");
+	puts(" [7] Display list.");
+	puts(" [8] Search list.");
 	puts(" [9] Save list.");
 	puts(" [10] Exit.\n");
 	puts("*******************************\n");
@@ -113,5 +114,3 @@ Bool check_YN(Bool yn) {
 
 	return (ans == 'Y') ? true : false;
 }
-
-//C:\Users\j\git\Bubble-sort-csv\convertcsv.csv
