@@ -23,12 +23,12 @@ typedef struct cc_holder {
 
 typedef enum _fields {last, first, cc_no, money} fields;
 
-Bool init_list(cc_holder_t ** head);
+Bool init_list(cc_holder_t ** head, char ** filepath);
 void destroy_cc_list(cc_holder_t ** head);
 void print_cc_list(cc_holder_t * head);
 void remove_chars(char *str);
 void bubbleSort(cc_holder_t * head);
 Bool bubbleSortInner(cc_holder_t * head);
-Bool writeToFile(cc_holder_t * head);
+Bool writeToFile(cc_holder_t * head, char * filepath);
 
 #endif /* OBJECTS_CC_HOLDER_H_ */

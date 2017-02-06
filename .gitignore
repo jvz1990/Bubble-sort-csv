@@ -1,1 +1,5 @@
 /Debug/
+/.gitignore
+/.project
+/.settings/
+/convertcsv(copy).csv

@@ -13,10 +13,9 @@
 #include <commons.h>
 #include <cc_holder.h>
 
-#define _file "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv.csv"
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
 
-Bool init_list(cc_holder_t ** head) {
+Bool init_list(cc_holder_t ** head, char ** filepath) {
 
 	if (*head != NULL) {
 		puts("\n\n!!=== ERROR - EXISTING LIST DETECTED ===!!\n\n");
@@ -25,7 +24,7 @@ Bool init_list(cc_holder_t ** head) {
 
 	cc_holder_t * tmp_node;
 
-	FILE* input_file = fopen(_file, "r");
+	FILE* input_file = fopen(*filepath, "r");
 
 	char record[1024];
 	fields field = last;
@@ -154,7 +153,7 @@ void bubbleSort(cc_holder_t * head) {
 		i++;
 	}
 
-	printf("number of outer iterations [%i]\n", i);
+	printf("Number of outer iterations [%i]\n", i);
 
 }
 
@@ -211,9 +210,16 @@ Bool bubbleSortInner(cc_holder_t * head) {
 	return swapped;
 }
 
-Bool writeToFile(cc_holder_t * head) {
+Bool writeToFile(cc_holder_t * head, char * filepath) {
 
-	FILE* output_file = fopen(_file2, "w");
+	int len = strlen(filepath) + 6;
+
+	char * newfile = NULL;
+	newfile = malloc(len);
+	strncpy(newfile, filepath, len - 10);
+	strcat(newfile, "(copy).csv");
+
+	FILE* output_file = fopen(newfile, "w");
 	int c = 0;
 	cc_holder_t * node = head->next;
 
@@ -229,9 +235,10 @@ Bool writeToFile(cc_holder_t * head) {
 		node = node->next;
 	}
 
-	if (fclose(output_file) == 0)
+	if (fclose(output_file) == 0) {
+		printf("\nSuccessfully written list to file:\n%s\n", newfile);
 		return true;
+	}
 	else
 		return false;
-
 }

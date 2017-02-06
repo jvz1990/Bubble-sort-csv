@@ -9,11 +9,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include <menu.h>
 #include <util.h>
 #include <commons.h>
-
 
 
 #define min_input  1
@@ -100,4 +100,18 @@ Bool get_file_path(char ** filepath) {
 
 Bool check_YN(Bool yn) {
 
+	char * input_str = NULL;
+	char ans;
+
+	do {
+
+		puts((yn == true) ? "[Y]/n" : "y/[N]");
+		input_str = getline();
+		ans = toupper(*input_str);
+
+	} while(ans != 'Y' && ans != 'N');
+
+	return (ans == 'Y') ? true : false;
 }
+
+//C:\Users\j\git\Bubble-sort-csv\convertcsv.csv
