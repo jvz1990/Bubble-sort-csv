@@ -30,7 +30,7 @@ void dispOptions(void) {
 	puts(" [5] Sort by last name.");
 	puts(" [6] Sort by CC number.");
 	puts(" [7] Display list.");
-	puts(" [8] Search list.");
+	puts(" [8] Search for persons.");
 	puts(" [9] Save list.");
 	puts(" [10] Exit.\n");
 	puts("*******************************\n");

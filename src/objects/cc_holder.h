@@ -31,5 +31,6 @@ void bubbleSort(cc_holder_t * head, choices * choice);
 Bool bubbleSortInner(cc_holder_t * head, choices * choice);
 Bool writeToFile(cc_holder_t * head, char * filepath);
 Bool swap(cc_holder_t * cur, choices * choice);
+void searchPerson(cc_holder_t * head);
 
 #endif /* OBJECTS_CC_HOLDER_H_ */

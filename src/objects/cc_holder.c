@@ -12,6 +12,7 @@
 
 #include <commons.h>
 #include <cc_holder.h>
+#include <util.h>
 
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
 
@@ -210,7 +211,7 @@ Bool bubbleSortInner(cc_holder_t * head, choices * choice) {
 				*node = head->next;
 	//UInt i = 0;
 
-	while (node != head && node->next != head) {
+	while (node->next != head) {
 		if (swap(node, choice) == true) {
 
 			first = node->previous;
@@ -269,4 +270,63 @@ Bool writeToFile(cc_holder_t * head, char * filepath) {
 	}
 	else
 		return false;
+}
+
+void searchPerson(cc_holder_t * head) {
+	cc_holder_t * new_head = NULL,
+				* tmp_node = NULL,
+				* node = head->next;
+
+	puts("Please enter search string:\n");
+
+	char * entry = getline();
+	puts("Searching...\n");
+
+	while(node != head) {
+
+		//TODO make a pointer list chain instead of copying objects..
+
+		if(strstr(node->first_name, entry) != NULL || strstr(node->last_name, entry) != NULL) {
+
+			if(new_head == NULL) {
+				new_head = malloc(sizeof(cc_holder_t));
+				tmp_node = malloc(sizeof(cc_holder_t));
+
+				tmp_node->age = node->age;
+				tmp_node->cc = node->cc;
+				tmp_node->cents = node->cents;
+				tmp_node->first_name = node->first_name;
+				tmp_node->last_name = node->last_name;
+
+				tmp_node->next = new_head;
+				tmp_node->previous = new_head;
+
+				new_head->next = tmp_node;
+				new_head->previous = tmp_node;
+			} else {
+				tmp_node->next = malloc(sizeof(cc_holder_t));
+				tmp_node->next->previous = tmp_node;
+				tmp_node->next->next = new_head;
+				new_head->previous = tmp_node->next;
+
+				tmp_node = tmp_node->next;
+
+				tmp_node->age = node->age;
+				tmp_node->cc = node->cc;
+				tmp_node->cents = node->cents;
+				tmp_node->first_name = node->first_name;
+				tmp_node->last_name = node->last_name;
+			}
+		}
+		node = node->next;
+	}
+
+	free(entry);
+	entry = NULL;
+
+	puts("Results found:\n");
+	print_cc_list(new_head);
+
+	destroy_cc_list(&new_head);
+
 }

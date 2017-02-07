@@ -105,8 +105,8 @@ int main(int argc, char **argv) {
 					print_cc_list(head);
 					break;
 				case(EIGHT):
-					//TODO opt8
 					puts("Option 8 has been selected.\n");
+					searchPerson(head);
 					break;
 				case(NINE):
 					puts("Option 9 has been selected.\n");
@@ -115,7 +115,6 @@ int main(int argc, char **argv) {
 					break;
 
 					//TODO add more sorting methods
-					//TODO add search function
 			}
 		}
 
