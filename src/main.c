@@ -2,7 +2,7 @@
  ============================================================================
  Name        : Bubble-sort-csv
  Author      : Johan van Zyl
- Version     : 0.90
+ Version     : 1.00
  Copyright   : None! Educational purpose
  Description : Experimental C project for algorithm analysis and general learning
 
@@ -11,6 +11,9 @@
 
  ============================================================================
  */
+
+//TODO: add multithreading
+//TODO: add more sorting algorithms
 
 #include <stdio.h>
 #include <stdlib.h>
