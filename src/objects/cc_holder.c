@@ -102,6 +102,24 @@ void destroy_cc_list(cc_holder_t ** head) {
 	temp = NULL;
 }
 
+void destroy_list(cc_list_t ** head) {
+
+	if (*head == NULL) {
+		//puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
+		return;
+	}
+
+	cc_list_t * temp;
+	temp = (*head)->next;
+	while (temp != *head) {
+		temp = temp->next;
+		free(temp->previous);
+	}
+	free(*head); // destroying head
+	*head = NULL; // setting NULL
+	temp = NULL;
+}
+
 void print_cc_list(cc_holder_t * head) {
 
 	if (head == NULL) {
@@ -125,7 +143,32 @@ void print_cc_list(cc_holder_t * head) {
 		current = current->next;
 
 	}
+}
 
+void print_list(cc_list_t * head) {
+	if(head == NULL) {
+		if (head == NULL) {
+			puts("\n!!--NO LIST FOUND. PLEASE INITIALIZE!--!!\n");
+			return;
+		}
+	}
+
+	int i = 0;
+	cc_list_t * current = head->next;
+	int c = 0;
+
+	while (current != head) {
+		c = current->obj->cents % 100;
+		printf("Object no. [%i] with person [%s %s] has cc no [%s] and has [$%d%s%d]\n",
+				i++, current->obj->first_name,
+				current->obj->last_name,
+				current->obj->cc,
+				(unsigned int) (current->obj->cents / 100),
+				(c < 10) ? ".0" : ".",
+				c);
+		current = current->next;
+
+	}
 }
 
 void remove_chars(char *str) {
@@ -273,9 +316,8 @@ Bool writeToFile(cc_holder_t * head, char * filepath) {
 }
 
 void searchPerson(cc_holder_t * head) {
-	cc_holder_t * new_head = NULL,
-				* tmp_node = NULL,
-				* node = head->next;
+	cc_holder_t * node = head->next;
+	cc_list_t * node_list = NULL, * node_list_head = NULL;
 
 	puts("Please enter search string:\n");
 
@@ -284,38 +326,30 @@ void searchPerson(cc_holder_t * head) {
 
 	while(node != head) {
 
-		//TODO make a pointer list chain instead of copying objects..
-
 		if(strstr(node->first_name, entry) != NULL || strstr(node->last_name, entry) != NULL) {
 
-			if(new_head == NULL) {
-				new_head = malloc(sizeof(cc_holder_t));
-				tmp_node = malloc(sizeof(cc_holder_t));
+			if(node_list_head == NULL) {
+				node_list_head = malloc(sizeof(cc_list_t));
+				node_list = malloc(sizeof(cc_list_t));
 
-				tmp_node->age = node->age;
-				tmp_node->cc = node->cc;
-				tmp_node->cents = node->cents;
-				tmp_node->first_name = node->first_name;
-				tmp_node->last_name = node->last_name;
+				node_list->previous = node_list_head;
+				node_list->next = node_list_head;
 
-				tmp_node->next = new_head;
-				tmp_node->previous = new_head;
+				node_list_head->next = node_list;
+				node_list_head->previous = node_list;
 
-				new_head->next = tmp_node;
-				new_head->previous = tmp_node;
+				node_list->obj = node;
+
 			} else {
-				tmp_node->next = malloc(sizeof(cc_holder_t));
-				tmp_node->next->previous = tmp_node;
-				tmp_node->next->next = new_head;
-				new_head->previous = tmp_node->next;
 
-				tmp_node = tmp_node->next;
+				node_list->next = malloc(sizeof(cc_list_t));
+				node_list->next->previous = node_list;
+				node_list->next->next = node_list_head;
+				node_list_head->previous = node_list->next;
 
-				tmp_node->age = node->age;
-				tmp_node->cc = node->cc;
-				tmp_node->cents = node->cents;
-				tmp_node->first_name = node->first_name;
-				tmp_node->last_name = node->last_name;
+				node_list = node_list->next;
+				node_list->obj = node;
+
 			}
 		}
 		node = node->next;
@@ -325,8 +359,8 @@ void searchPerson(cc_holder_t * head) {
 	entry = NULL;
 
 	puts("Results found:\n");
-	print_cc_list(new_head);
+	print_list(node_list_head);
 
-	destroy_cc_list(&new_head);
+	destroy_list(&node_list_head);
 
 }
