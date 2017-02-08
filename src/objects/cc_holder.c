@@ -9,12 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 #include <commons.h>
 #include <cc_holder.h>
 #include <util.h>
 
-#define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
 UInt list_size = 0;
 
 Bool init_list(cc_holder_t ** head, char ** filepath) {
@@ -201,11 +202,9 @@ void bubbleSort(cc_holder_t * head, choices * choice) {
 		puts("\nPlease load a csv file first.\n");
 		return;
 	}
-	while (1) {
+	for(;;i++)
 		if (bubbleSortInner(head, choice, &i) == false)
 			break;
-		i++;
-	}
 
 	printf("Number of outer iterations [%i]\n", i);
 	printf("[%d] numbers from worst case scenario.\n", list_size - i);
