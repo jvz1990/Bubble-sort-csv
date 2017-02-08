@@ -35,9 +35,11 @@ void print_cc_list(cc_holder_t * head);
 void print_list(cc_list_t * head);
 void remove_chars(char *str);
 void bubbleSort(cc_holder_t * head, choices * choice);
-Bool bubbleSortInner(cc_holder_t * head, choices * choice);
+Bool bubbleSortInner(cc_holder_t * head, choices * choice, int * pos);
 Bool writeToFile(cc_holder_t * head, char * filepath);
 Bool swap(cc_holder_t * cur, choices * choice);
 void searchPerson(cc_holder_t * head);
+
+extern UInt list_size;
 
 #endif /* OBJECTS_CC_HOLDER_H_ */

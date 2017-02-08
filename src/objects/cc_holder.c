@@ -15,6 +15,7 @@
 #include <util.h>
 
 #define _file2 "C:\\Users\\j\\workspace\\CCcsvParser\\convertcsv_sorted.csv"
+UInt list_size = 0;
 
 Bool init_list(cc_holder_t ** head, char ** filepath) {
 
@@ -30,6 +31,8 @@ Bool init_list(cc_holder_t ** head, char ** filepath) {
 	char record[1024];
 	fields field = last;
 	char *tmp, *tok;
+
+	list_size = 0;
 
 	while (fgets(record, 1024, input_file)) {
 		tmp = strdup(record);
@@ -76,6 +79,8 @@ Bool init_list(cc_holder_t ** head, char ** filepath) {
 			(*head)->previous = tmp_node;
 		}
 
+		list_size++;
+
 	}
 
 	if (fclose(input_file) == 0)
@@ -100,6 +105,8 @@ void destroy_cc_list(cc_holder_t ** head) {
 	free(*head); // destroying head
 	*head = NULL; // setting NULL
 	temp = NULL;
+
+	list_size = 0;
 }
 
 void destroy_list(cc_list_t ** head) {
@@ -188,7 +195,6 @@ void bubbleSort(cc_holder_t * head, choices * choice) {
 	/*
 	 * Essentially start from the head and find an item to 'bubble up'
 	 * until there are items to 'bubble up'.
-	 * TODO optimize algorithm to exclude highest values -> need counter and chain size counter
 	 */
 	int i = 0;
 	if(head == NULL) {
@@ -196,12 +202,13 @@ void bubbleSort(cc_holder_t * head, choices * choice) {
 		return;
 	}
 	while (1) {
-		if (bubbleSortInner(head, choice) == false)
+		if (bubbleSortInner(head, choice, &i) == false)
 			break;
 		i++;
 	}
 
 	printf("Number of outer iterations [%i]\n", i);
+	printf("[%d] numbers from worst case scenario.\n", list_size - i);
 
 }
 
@@ -215,7 +222,6 @@ Bool swap(cc_holder_t * cur, choices * choice) {
 			 if(strcmp(cur->first_name, cur->next->first_name) > 0) return true;
 			 break;
 		 case FIVE:
-			 //printf("1: [%s], 2: [%s]\n",cur->last_name, cur->next->last_name);
 			 if(strcmp(cur->last_name, cur->next->last_name) > 0) return true;
 			 break;
 		 case SIX:
@@ -229,7 +235,7 @@ Bool swap(cc_holder_t * cur, choices * choice) {
 	return false;
 }
 
-Bool bubbleSortInner(cc_holder_t * head, choices * choice) {
+Bool bubbleSortInner(cc_holder_t * head, choices * choice, int * pos) {
 
 	// Update. Can look confusing but pointer swap is do able.
 	/*
@@ -247,26 +253,28 @@ Bool bubbleSortInner(cc_holder_t * head, choices * choice) {
 	 *	 */
 
 	Bool swapped = false;
-	cc_holder_t *first = NULL,
+	cc_holder_t //*first = NULL,
 				//*second = NULL,
 				*third = NULL,
 				*fourth = NULL,
 				*node = head->next;
-	//UInt i = 0;
+	int i = 0;
 
-	while (node->next != head) {
+	//printf("Outer count: [%d], list size: [%d]\n", *pos, list_size);
+
+	while (node->next != head && (i++ < (list_size - *pos))) {
 		if (swap(node, choice) == true) {
 
-			first = node->previous;
+			//first = node->previous;
 			//second = node;
 			third = node->next;
 			fourth = node->next->next;
 
 			//outers
 			fourth->previous = node; //4 to 2
-			first->next = third; //1 to 3
+			node->previous->next = third; //1 to 3
 
-			third->previous = first; // 3 to 1
+			third->previous = node->previous; // 3 to 1
 			third->next = node; // 3 to 2
 
 			node->next = fourth; //2 to 4
@@ -276,7 +284,6 @@ Bool bubbleSortInner(cc_holder_t * head, choices * choice) {
 		} else {
 			node = node->next;
 		}
-		//i++;
 	}
 	//printf("number of inner iterations [%d]\n", i);
 	return swapped;
